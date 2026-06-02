@@ -2,7 +2,7 @@
 
 ## 🎯 Core Innovation
 
-Decomposition is a fundamental strategy for large-scale optimization — by partitioning variables and constraints into semi-independent subproblems, problems that would otherwise be intractable become solvable at scale. However, identifying an effective decomposition structure has traditionally required substantial domain expertise, as it involves recognizing sparse coupling patterns in the variable-constraint topology of the problem.
+Decomposition is a fundamental strategy for large-scale optimization. By partitioning variables and constraints into semi-independent subproblems, problems that would otherwise be intractable become solvable at scale. However, identifying decomposable structure requires recognizing sparse coupling patterns in the variable-constraint topology.
 
 **The Fundamental Challenge**: Existing OR benchmarks are designed for NL-to-formulation evaluation and lack the structural graph annotations and problem scale that systematic decomposition research requires. Current generation methods treat variable-constraint structure as a by-product and cannot simultaneously control graph topology, problem type diversity, and mathematical validity at scale. This gap has left the application of LLMs to graph-guided optimization decomposition entirely unexplored.
 
@@ -30,7 +30,7 @@ A novel generation paradigm that decouples topology from semantics:
 ### 2. GraphOR Benchmark Construction
 A dedicated benchmark of 1,771 structurally annotated problems:
 - **Problem Diversity**: Spans Linear Programming (LP), Mixed-Integer Linear Programming (MILP), and Mixed-Integer Nonlinear Programming (MINLP)
-- **Three Scale Brackets**: Small (20–80 variables), Medium (80–200 variables), and Large (200–500 variables) — all exhibiting diverse WL similarity distributions
+- **Three Scale Brackets**: Small (20–80 variables), Medium (80–200 variables), and Large (200–500 variables). All scales exhibit diverse WL similarity distributions
 - **Rich Annotations**: Each instance includes block assignments, coupling constraints, variable-constraint bipartite graph topology, natural language description, and mathematical model
 - **Quality Assurance**: All instances undergo solver-based feasibility verification, rule-based structural consistency checks, and ADMM-based decomposability validation
 
@@ -71,6 +71,8 @@ For problem types, L, M, and N denote LP, MILP, and MINLP, respectively.
 | ReSocratic | 84.6 | 1.07 | 0.00 | L, M, N |
 | **GraphOR** | **120.6** | **17.60** | **0.14** | L, M, N |
 
+
+
 | Method | Feasibility (%) ↑ | Consistency (%) ↑ | Zero-Hallucination (%) ↑ | WL Similarity |
 |--------|-------------------|-------------------|--------------------------|---------------|
 | Direct | 87.4 | 35.4 | 33.6 | 0.278 |
@@ -81,7 +83,7 @@ For problem types, L, M, and N denote LP, MILP, and MINLP, respectively.
 
 </div>
 
-GraphOR is the **only method** that simultaneously maintains high feasibility (98.0%) and 100% structural consistency across all three scales — achieving 17.60 blocks with a coupling ratio of 0.14 and 120.6 variables, while other baselines fail to generate coupled multi-block structures.
+GraphOR is the **only method** that simultaneously maintains high feasibility (98.0%) and 100% structural consistency across all three scales, achieving 17.60 blocks with a coupling ratio of 0.14 and 120.6 variables, while other baselines fail to generate coupled multi-block structures.
 
 ## 🏆 Experimental Results
 
@@ -107,18 +109,18 @@ Extensive experiments validate that LLMs can decompose optimization problems fro
 
 1. **Structure Blueprint Generation**: Seed problems are parsed into structure signatures (bipartite graph, block partition, coupling constraints, coupling ratio). New blueprints are synthesized through deterministic graph transformations and LLM-driven variations, with WL similarity gating enforcing topological diversity across three tiers.
 
-2. **Content Generation**: A decoupled two-step pipeline prevents structural drift — a solver-validated mathematical model is generated first from the fixed blueprint, then a natural language description is grounded in the validated model with explicit coverage checks ensuring every variable and constraint is referenced.
+2. **Content Generation**: A decoupled two-step pipeline prevents structural drift. A solver-validated mathematical model is generated first from the fixed blueprint, then a natural language description is grounded in the validated model with explicit coverage checks ensuring every variable and constraint is referenced.
 
 3. **Structural Verification**: A rule-based verifier ensures alignment between the generated model and the blueprint (variable/constraint set matching, block partition recovery), combined with solver-based feasibility checks. Only instances passing both checks enter the dataset.
 
 ### Key Design Decisions
 
-- **Decoupled Generation**: Generating the mathematical model before the natural language description is essential — ablation shows feasibility drops from 98.0% to 20.0% when this decoupling is removed
+- **Decoupled Generation**: Generating the mathematical model before the natural language description is essential; ablation shows feasibility drops from 98.0% to 20.0% when this decoupling is removed
 - **WL Similarity Gate**: Controls diversity within quality constraints rather than maximizing either dimension alone; ablation confirms it anchors diversity within the intended scale
 - **ADMM Decomposability Filter**: Only instances where ADMM converges are retained, ensuring that annotated block structures are operationally decomposable
 
 ## 💡 Significance
 
-GraphOR establishes one of the first principled benchmarks for research at the intersection of structured optimization and LLM reasoning. The consistent and substantial improvement from graph annotation — observed across all five LLMs and all three scales — demonstrates that structural graph information helps address a key bottleneck for LLM-based decomposition, and that text alone is not sufficient for reliable structural reasoning at scale.
+GraphOR establishes one of the early benchmarks for research at the intersection of structured optimization and LLM reasoning. The consistent and substantial improvement from graph annotation, observed across all five LLMs and all three scales, demonstrates that structural graph information helps address a key bottleneck for LLM decomposition, and that text alone is not sufficient for reliable structural reasoning at scale.
 
 The structure-first generation paradigm, where bipartite graph blueprints are fixed before content generation, provides a generalizable approach for constructing structurally annotated datasets. The benchmark's cross-scale, cross-type design enables fine-grained analysis of how problem structure, scale, and type interact with LLM decomposition capability, opening new directions for graph-guided optimization research.
