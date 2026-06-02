@@ -1,1 +1,1 @@
-# GraphOR-A-Structure-First-Benchmark-for-Graph-Assisted-Optimization-Decomposition-with-LLMs
+# GraphOR:A Structure First Benchmark for Graph-Assisted Optimization Decomposition with LLMs
