@@ -12,6 +12,13 @@ To bridge this gap, we present **GraphOR**, a **structure-first** method for gen
 
 **Transformative Approach**: GraphOR combines Weisfeiler-Lehman (WL)-controlled topology diversity with a solver-in-the-loop content pipeline and rule-based structural verifier, enabling the construction of one of the first datasets designed for systematic study of graph-guided optimization decomposition. The resulting benchmark of 1,771 instances spanning LP, MILP, and MINLP across three scales establishes a principled foundation for research at the intersection of structured optimization and LLM reasoning.
 
+<div align="center">
+<img src="Graph/compare.pdf" width="1000" alt="Paradigm Comparison">
+</div>
+<p align="center">
+<em>Figure 1: Comparison between baseline NL-to-formulation methods and GraphOR. (Left) Baseline NL-to-formulation treats structure as a by-product, resulting in small-scale models with inseparable topologies. (Right) GraphOR employs a structure-first, blueprint-driven approach to generate large-scale, decomposable problems with controllable sparse coupling. This ensures structural integrity and provides essential annotations for decomposition strategy in OR research.</em>
+</p>
+
 ## 🚀 Key Contributions
 
 ### 1. Structure-First Generation Method
@@ -36,20 +43,30 @@ A comprehensive evaluation of decomposition capability across five LLMs:
 ## 🏗 System Architecture
 
 <div align="center">
-<img src="figure/figure_overview.jpg" width="1000" alt="GraphOR Architecture">
+<img src="Graph/GraphOR.pdf" width="1000" alt="GraphOR Pipeline">
 </div>
 <p align="center">
-<em>Figure 1: Overview of the GraphOR pipeline. Structure blueprints are extracted from seed problems and diversified via a WL-similarity gate, populated with solver-validated mathematical models and natural language descriptions, and verified through structural and feasibility checks before inclusion in the benchmark.</em>
+<em>Figure 2: Overview of the GraphOR pipeline. Structure blueprints are extracted from seed problems and diversified via a WL-similarity gate, populated with solver-validated mathematical models and natural language descriptions, and verified through structural and feasibility checks before inclusion in the benchmark.</em>
 </p>
 
-## 📊 Benchmark Comparison
+## 📊 Benchmark
 
 <div align="center">
-<img src="figure/figure_datasets.jpg" width="800" alt="Dataset Comparison">
+<img src="Graph/dataset_overview.pdf" width="900" alt="Dataset Overview">
 </div>
 <p align="center">
-<em>Figure 2: Comparison of existing OR datasets and benchmarks. Unlike prior datasets targeting NL-to-formulation or end-to-end solving, GraphOR is the first to provide explicit bipartite graph annotations, block partitions, and coupling constraints — the essential ingredients for systematic decomposition research.</em>
+<em>Figure 3: Structural properties of the GraphOR benchmark. (a) Variable count distribution by scale. (b) Problem type distribution. (c) WL graph similarity distribution. (d) Constraint count distribution by scale.</em>
 </p>
+
+GraphOR is the **only method** that simultaneously maintains high feasibility (≥96.6%) and 100% structural consistency across all three scales:
+
+| Method | Feasibility | Struct. Consistency | Blocks | Coupling Ratio |
+|--------|------------|---------------------|--------|----------------|
+| Direct | 86–90% | 35–39% | 1.3–1.5 | 0.00 |
+| LLMOPT | 49–52% | 52–55% | 1.2–1.3 | 0.00 |
+| OptMATH | 52–63% | 100% | 9.5–48.2 | 0.07 |
+| ReSocratic | 18–39% | 17–63% | 1.0–1.1 | 0.00 |
+| **GraphOR** | **96.6–99.8%** | **100%** | **6.6–45.9** | **0.13–0.14** |
 
 ## 🏆 Experimental Results
 
@@ -63,23 +80,11 @@ Extensive experiments validate that LLMs can decompose optimization problems fro
 - **MINLP benefits most from graph annotation** (ΔQL = −0.62), as the bipartite graph separates structural reasoning from nonlinear algebraic reasoning
 
 <div align="center">
-<img src="figure/figure_problem_type.jpg" width="600" alt="Performance by Problem Type">
+<img src="Graph/type_analysis.pdf" width="800" alt="Performance by Problem Type">
 </div>
 <p align="center">
-<em>Figure 3: Decomposition performance by problem type (DeepSeek-R1). Graph annotation provides the largest benefit for MINLP instances, where LLMs must simultaneously reason about nonlinear structure, integrality, and coupling topology.</em>
+<em>Figure 4: Decomposition performance by problem type, comparing with (blue) and without (orange) graph annotation. (a) Quality loss; (b) ADMM convergence rate.</em>
 </p>
-
-### Generation Quality
-
-GraphOR is the **only method** that simultaneously maintains high feasibility (≥96.6%) and 100% structural consistency across all three scales:
-
-| Method | Feasibility | Struct. Consistency | Blocks | Coupling Ratio |
-|--------|------------|---------------------|--------|----------------|
-| Direct | 86–90% | 35–39% | 1.3–1.5 | 0.00 |
-| LLMOPT | 49–52% | 52–55% | 1.2–1.3 | 0.00 |
-| OptMATH | 52–63% | 100% | 9.5–48.2 | 0.07 |
-| ReSocratic | 18–39% | 17–63% | 1.0–1.1 | 0.00 |
-| **GraphOR** | **96.6–99.8%** | **100%** | **6.6–45.9** | **0.13–0.14** |
 
 ## 🔬 Technical Approach
 
